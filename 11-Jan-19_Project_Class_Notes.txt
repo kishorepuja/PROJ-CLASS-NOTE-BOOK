@@ -1,0 +1,147 @@
+As part of  TDD  creation we will create below 3 types of diagrams.
+
+1) Class diagrams
+
+2) Sequence diagrams  and
+
+3) Flow diagrams
+
+Class diagrams : To represent relation among the classes in UML format
+
+Sequence diagram : To represent low level application execution flow details
+
+Flow diagram : To represent high level application execution flow details.
+
+Classes Required for our Requirement
+------------------------------------------------
+Model classes
+Entity classes (Table mapping)
+Dao classes or Repositories
+Service classes
+Controller
+Utility classes
+
+Model class
+---------------
+Model classes are used to transfer data from one layer to another layer.
+
+These classes contains private variables and setters and getter methods for all variables, constructors, toString() , hashcode and equals methods.
+
+If we observer all the model classes contains same kind of code. This can be called as boiler plate code.
+
+Lombok is a java library which is used to reduce boilor plate code in model classes.
+
+If we use Lombok libraries in project, then we no need to write setter, getters, constructor, tostring , hashcode and equals mehtods. It will generate automatically.
+
+Lombok libraries provided some annotations to avoid boilor plate code.
+---------------------------------------------------------------------------------
+//Model class without Lombok libraries
+public class User{
+ 
+      private int id;
+      private String name;
+   
+     public User() {  }
+
+     public User(int id, String name){
+	this.id = id;
+	this.name  = name;
+     }
+      
+      //setter for id 
+      //getter for id;
+
+     //setter for name
+    //getter for name
+
+    //toString ( )
+
+    //hashcode( ) method
+
+    //equals ( ) method
+}
+-------------------------------------------------------------------------------
+
+//Model class with Lombok libraries
+
+@Data
+public class User{
+ 
+      private int id;
+      private String name;
+}
+
+Using Lombok in project
+-------------------------------
+1) Create maven project  
+
+2) Add Lombok dependency in pom.xml file
+
+3) Install Lombok plugin in IDE using Lombok jar file
+
+Goto Mvn local repository(.m2) - > Go to Lombok jar file Location -> Execute below command in command prompt.
+
+Command :-      java  -jar  lombok.jar
+
+It will open popup - > Select IDE installation folder (STS.exe)  -> Click on Install button  -> It will  add javaagent property in sts.ini file.
+
+-> Close and Open IDE --> Then we can use Lombok annotations in model classes.
+---------------------------------------------------------------------------------
+
+Entity classes
+-----------------
+Entity classes are used to map with Database tables (ORM).
+
+This mapping we can do in 2 ways.
+	1) XML files
+	2) Annotations
+
+@Entity
+@Table
+@Id
+@Column
+@GeneratedValue
+@CreationTimestamp
+@UpdateTimestamp  etc....
+------------------------------------------------------------------------
+@Entity
+@Table("USER_MASTER")
+@Data // lombok annotation
+public class User UserEntity {
+    
+      @Id
+      @GeneratedValue
+      private Integer userId;
+      private String username;
+      private String email;
+}
+-----------------------------------------------------------------------------
+Dao classes or Repositories
+-----------------------------------
+These classes are only responsible for persistence logic (DB Interaction) operations in application.
+
+Note : For every table its recommended to create one dedicated Dao class.
+
+	USER_MASTER ----> UserMasterDao.java
+	ROLE_MASTER----> RoleMasterDao.java
+
+Generally first we will create dao interface and we will create dao impl class like below.
+-------------------------------------------------------------------------------
+  public interface  UserMasterDao{
+	public boolean save(UserMaster um);
+  }
+
+  public class UserMasterDaoImpl  implements 			   			UserMasterDao{	
+	public boolean save(UserMaster um){
+		//logic
+
+		return flag;
+   	}
+   }
+-------------------------------------------------------------------------------
+In Recent days, Spring provided one new module called Spring Data. In this module we have predefined Repository interfaces. If we use these interfaces then no need create implementation classes for dao interfaces. Repositories provides implementation for our dao interfaces. 
+---------------------------------------------------------------------------
+public interface UserMasterDao extends 		CRUDRepository<UserMasterEntity> {
+	
+}
+-------------------------------------------------------------------------
